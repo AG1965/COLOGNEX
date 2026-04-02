@@ -4,7 +4,7 @@
 
 ## Description
 
-Implementation of the "Kölner Phonetik" (Cologne Phonetics) algorithm as RPGLE service program for the IBM i. Source for a user defined SQL function that uses this serviceprogram included.
+Implementation of the "Kölner Phonetik" (Cologne Phonetics) algorithm as RPGLE service program for the IBM i. Create a user defined SQL function to use this serviceprogram's functionality in SQL.
 
 The "Kölner Phonetik" is a phonetic algorithm for the German language, similar to "SOUNDEX" for English. That's the reason for the Name "COLOGNEX".
 
@@ -12,6 +12,10 @@ See the wikipedia articles for details:
 
 - [Kölner Phonetik](https://de.wikipedia.org/wiki/K%C3%B6lner_Phonetik)
 - [SOUNDEX](https://en.wikipedia.org/wiki/Soundex)
+
+### TL;DR
+
+The idea is to find persons in the database when you are not sure about the correct spelling of their name. For example, if you want to find all entries for "Müller", you might also want to find entries for "Mueller", "Muller" or "Müllar". With a normal string comparison, you would only find the exact match, but with a phonetic algorithm, you can find all similar sounding names, because they all share the very same Cologne phonetic.
 
 ## Installation
 
@@ -63,11 +67,24 @@ This should return the phonetic code for "Wikipedia", which is `3412`.
 
 The service program can be used in RPGLE programs, but also as a user defined SQL function. The latter is the most common use case, because it allows to use the algorithm in SQL queries, for example to find similar sounding names in a database.
 
+For practical use, i'd recommend to use the SQL function only. Use embedded SQL to use it in RPG programs.
+
+## Example
+
+Find all entries that sound like "Meier" in the database:
+
+```SQL
+ SELECT * FROM PERSONS WHERE COLOGNEX(NAME) = COLOGNEX('Meier')
+```
+
+The Cologne phonetic code for "Meier" is `67`, so this query will return all entries where the phonetic code of the name is also `67`, which includes names like "Meyer", "Maier", "Mayer" and so on.
+
 ## best practices for comparison
 
 To make this work best, you might want to consider one or more of the following points:
 
 - do not include titles or degress in the strings you want to compare, just the name(s).
 - always use the same format for the names, for example "Firstname Lastname" or "Lastname, Firstname". Or, from a performance point of view, create two fields in the database, one for the first name and one for the last name, and compare them separately.
-- if you want to compare your data on a regular basis to lists, consider storing the phonetic code in the database as well, so you don't have to calculate it every time. You can use a trigger to automatically calculate and store the phonetic code when a new record is inserted or an existing record is updated.
+- if you want to compare your data on a regular basis to lists, consider storing the phonetic code in the database as well, so you don't have to calculate it every time. You can use a trigger to automatically calculate and store the phonetic code when a new record is inserted or an existing record is updated. And, of course, you want to define an index on the phonetic code field to improve performance of the comparison.
+- use only "=" (equal) to search for similar sounding names, not "LIKE" or other comparison operators, because the phonetic code is not a string that can be searched with wildcards, but a code that represents the sound of the name. So you should always compare the phonetic codes directly.
 - needless to say, but be aware that the algorithm is not perfect and might produce false positives or false negatives. It is always a good idea to manually review the results of the comparison, especially if you are using it for critical applications.
