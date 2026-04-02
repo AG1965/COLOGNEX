@@ -9,6 +9,7 @@ Implementation of the "Kölner Phonetik" (Cologne Phonetics) algorithm as RPGLE 
 The "Kölner Phonetik" is a phonetic algorithm for the German language, similar to "SOUNDEX" for English. That's the reason for the Name "COLOGNEX".
 
 See the wikipedia articles for details:
+
 - [Kölner Phonetik](https://de.wikipedia.org/wiki/K%C3%B6lner_Phonetik)
 - [SOUNDEX](https://en.wikipedia.org/wiki/Soundex)
 
@@ -18,20 +19,18 @@ Copy the contents of the repository to your IBM i. This can be done in several w
 
 In this example we assume that the repository is copied to the directory `/home/myuser/colognex` on the IBM i and the objects shall be created in library `MYLIB`.
 
-Note: although i might not use any SQL in my RPG programs, i like to compile them with the SQL precompiler anyways, so i don't have to think twice when i want to use SQL in the program as i do not have to expect any problems.
-
 Change the current directory to this one
 
 ```CLLE
  CHGCURDIR '/home/myuser/colognex'
 ```
 
-and execute the follwoing commands. (The backslash is used to split the command into multiple lines for better readability. Do not enter it.)
+and execute the following commands.
 
 ```CLLE
- CRTRPGMOD MODULE(MYLIB/COLOGNEX) \
-          SRCSTMF('/home/myuser/colognex/QRPGSRC/COLOGNEX.SQLRPGLE') \
-          TGTCCSID(*JOB)
+ CRTRPGMOD MODULE(MYLIB/COLOGNEX)
+           SRCSTMF('/home/myuser/colognex/QRPGSRC/COLOGNEX.SQLRPGLE')
+           TGTCCSID(*JOB)
 
  CRTSRVPGM SRVPGM(MYLIB/COLOGNEX) EXPORT(*ALL)
 ```
@@ -39,7 +38,7 @@ and execute the follwoing commands. (The backslash is used to split the command 
 To create the user defined SQL function, execute the following command in STRSQL or the "Db2 for i" extension for VS Code or "Run SQL Scripts" in ACS:
 
 ```SQL
- CREATE OR REPLACE FUNCTION MYLIB.COLOGNEX 
+ CREATE OR REPLACE FUNCTION MYLIB.COLOGNEX
     (CLEARTEXT VARCHAR(512))
   RETURNS VARCHAR(512)
   LANGUAGE RPGLE
@@ -49,6 +48,7 @@ To create the user defined SQL function, execute the following command in STRSQL
   PARAMETER STYLE GENERAL
   PROGRAM TYPE SUB
 ```
+
 If you use this heavily, you might want to remove the "NOT" in front of the "DETERMINISTIC" clause, because the function is in fact deterministic. This can improve performance in some cases, because the database engine can cache the results for previously seen inputs. But if you plan to change the implementation of the function, you should keep it as "NOT DETERMINISTIC" to avoid caching of results that might become incorrect after the change!
 
 You can then test the function with the following SQL statement:
