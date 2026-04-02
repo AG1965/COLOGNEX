@@ -1,11 +1,12 @@
 **FREE
-Ctl-Opt NOMAIN OPTION(*SRCSTMT:*NODEBUGIO:*NOUNREF);
+Ctl-Opt NOMAIN OPTION(*SRCSTMT:*NODEBUGIO:*NOUNREF)
+        TEXT('Kölner Phonetik');
+
+// Kölner Phonetik in SQLRPGLE
+
+// https://github.com/AG1965/COLOGNEX
 
 // siehe https://de.wikipedia.org/wiki/K%C3%B6lner_Phonetik
-
-Dcl-PR colognex VARCHAR(512);
-  p_input  VARCHAR(512) CONST;
-End-PR;
 
 Dcl-Proc colognex EXPORT;
   Dcl-Pi *N  LIKE(rtn_string);
@@ -47,12 +48,12 @@ rtn_string = %SCANRPL('SC' :'8'  :rtn_string);
 rtn_string = %SCANRPL('ZC' :'8'  :rtn_string);
 rtn_string = %SCANRPL(' C' :' 8' :rtn_string);
 
-rtn_string = %SCANRPL('DC' :' 8' :rtn_string);
-rtn_string = %SCANRPL('DS' :' 8' :rtn_string);
-rtn_string = %SCANRPL('DZ' :' 8' :rtn_string);
-rtn_string = %SCANRPL('TC' :' 8' :rtn_string);
-rtn_string = %SCANRPL('TS' :' 8' :rtn_string);
-rtn_string = %SCANRPL('TZ' :' 8' :rtn_string);
+rtn_string = %SCANRPL('DC' :'8C' :rtn_string);
+rtn_string = %SCANRPL('DS' :'8S' :rtn_string);
+rtn_string = %SCANRPL('DZ' :'8Z' :rtn_string);
+rtn_string = %SCANRPL('TC' :'8C' :rtn_string);
+rtn_string = %SCANRPL('TS' :'8S' :rtn_string);
+rtn_string = %SCANRPL('TZ' :'8Z' :rtn_string);
 
 rtn_string = %SCANRPL('CX' :'8'  :rtn_string);
 rtn_string = %SCANRPL('KX' :'8'  :rtn_string);
