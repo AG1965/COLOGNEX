@@ -46,14 +46,16 @@ To create the user defined SQL function, execute the following command in STRSQL
     (CLEARTEXT VARCHAR(512))
   RETURNS VARCHAR(512)
   LANGUAGE RPGLE
-  NOT DETERMINISTIC
+  DETERMINISTIC
   NO SQL
   EXTERNAL NAME 'MYLIB/COLOGNEX(COLOGNEX)'
   PARAMETER STYLE GENERAL
   PROGRAM TYPE SUB
 ```
 
-If you use this heavily, you might want to remove the "NOT" in front of the "DETERMINISTIC" clause, because the function is in fact deterministic. This can improve performance in some cases, because the database engine can cache the results for previously seen inputs. But if you plan to change the implementation of the function, you should keep it as "NOT DETERMINISTIC" to avoid caching of results that might become incorrect after the change!
+If you plan to change the implementation of the function, you should change it to `NOT DETERMINISTIC` to avoid caching of results that might become incorrect after changing the service program!
+
+But be sure to turn it back to `DETERMINISTIC` after you are done with the changes, because otherwise you'll receive SQL0583 when you try to use it in e.g. an `ON` clause.
 
 You can then test the function with the following SQL statement:
 
