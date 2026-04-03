@@ -33,20 +33,20 @@ rtn_string = %SCANRPL('ß':'SZ':rtn_string);
 // Bindestriche entfernen
 rtn_string = %SCANRPL('-' :'' :rtn_string);
 
-// " CA" am Wortanfang (im Anlaut) durch "KA" ersetzen, usw.
-rtn_string = %SCANRPL(' CA':' 4A':rtn_string);
-rtn_string = %SCANRPL(' CH':' 4H':rtn_string);
-rtn_string = %SCANRPL(' CK':' 4K':rtn_string);
-rtn_string = %SCANRPL(' CL':' 4L':rtn_string);
-rtn_string = %SCANRPL(' CO':' 4O':rtn_string);
-rtn_string = %SCANRPL(' CQ':' 4Q':rtn_string);
-rtn_string = %SCANRPL(' CR':' 4R':rtn_string);
-rtn_string = %SCANRPL(' CU':' 4U':rtn_string);
-rtn_string = %SCANRPL(' CX':' 4X':rtn_string);
-
+// C: außer nach S, Z - darum vorher
 rtn_string = %SCANRPL('SC' :'8'  :rtn_string);
 rtn_string = %SCANRPL('ZC' :'8'  :rtn_string);
-rtn_string = %SCANRPL(' C' :' 8' :rtn_string);
+
+// " CA" am Wortanfang (im Anlaut) durch "KA" ersetzen, usw.
+rtn_string = %SCANRPL('CA' :'4A' :rtn_string);
+rtn_string = %SCANRPL('CH' :'4H' :rtn_string);
+rtn_string = %SCANRPL('CK' :'4K' :rtn_string);
+rtn_string = %SCANRPL(' CL':' 4L':rtn_string);
+rtn_string = %SCANRPL('CO' :'4O' :rtn_string);
+rtn_string = %SCANRPL('CQ' :'4Q' :rtn_string);
+rtn_string = %SCANRPL(' CR':' 4R':rtn_string);
+rtn_string = %SCANRPL('CU' :'4U' :rtn_string);
+rtn_string = %SCANRPL('CX' :'4X' :rtn_string);
 
 rtn_string = %SCANRPL('DC' :'8C' :rtn_string);
 rtn_string = %SCANRPL('DS' :'8S' :rtn_string);
@@ -92,6 +92,7 @@ rtn_string = %SCANRPL('N'  :'6'  :rtn_string);
 
 rtn_string = %SCANRPL('R'  :'7'  :rtn_string);
 
+rtn_string = %SCANRPL('C'  :'8'  :rtn_string);
 rtn_string = %SCANRPL('S'  :'8'  :rtn_string);
 rtn_string = %SCANRPL('Z'  :'8'  :rtn_string);
 
